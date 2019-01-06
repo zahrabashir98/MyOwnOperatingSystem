@@ -1,0 +1,53 @@
+[33mcommit 5abafc6ad0bcc5f2aa1d9d92bf8d62096ce6f2cd[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: zahra <zahra_9877@yahoo.com>
+Date:   Sun Jan 6 19:10:27 2019 +0330
+
+    Add Port.h
+
+[33mcommit 99ddc2cd8c9d8ec362aea17c41399505a63f19b9[m
+Author: zahra <zahra_9877@yahoo.com>
+Date:   Sun Jan 6 18:37:01 2019 +0330
+
+    Add gdt.cpp file containing GlobalDescriporTable information
+
+[33mcommit 47646b0d2fe1f423402ed4b8a7c82e73886025c9[m
+Author: zahra <zahra_9877@yahoo.com>
+Date:   Sun Jan 6 17:24:32 2019 +0330
+
+    Add gdt.h file
+
+[33mcommit b0b09fdea9b078360eafb06a54444a5a21963903[m
+Author: zahra <zahra_9877@yahoo.com>
+Date:   Sun Jan 6 16:15:56 2019 +0330
+
+    Add types.h file
+
+[33mcommit ce36f2d638841b24f6972ec419a51b98249591a1[m
+Author: zahra <zahra_9877@yahoo.com>
+Date:   Sun Jan 6 15:55:48 2019 +0330
+
+    Handle problem of re opening
+
+[33mcommit c0a51a3073f472289660584634d35c9535535098[m
+Author: zahra <zahra_9877@yahoo.com>
+Date:   Sun Jan 6 15:54:20 2019 +0330
+
+    Add run tag inorder to run vm directly
+
+[33mcommit 1a6172ea00bc0e31dab359f1cb6a89b865ec0a98[m
+Author: zahra <zahra_9877@yahoo.com>
+Date:   Sun Jan 6 15:31:17 2019 +0330
+
+    Add mykernel.iso file in Makefile
+
+[33mcommit 31f1987dd86129f60cd71d6005c59c8e8610f74d[m
+Author: zahra <zahra_9877@yahoo.com>
+Date:   Sun Jan 6 15:10:06 2019 +0330
+
+    Add basic files including kernel.cpp, loader.S, linker.ld and Makefile
+
+[33mcommit b9c29e65ee833108d43e41287c98de3eae4df020[m
+Author: Zahra Bashir <zahra_9877@yahoo.com>
+Date:   Fri Dec 28 16:07:10 2018 +0000
+
+    Initial commit
