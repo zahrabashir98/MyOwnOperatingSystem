@@ -24,18 +24,18 @@ GlobalDescriptorTable::~GlobalDescriptorTable()
 }
 
 // offset of data segment selector
-
 uint16_t GlobalDescriptorTable :: DataSegmentSelector()
 {
     return (uint8_t*)&dataSegmentSelector - (uint8_t*)this;
 }
 
 // offset of code segment selector
-
 uint16_t GlobalDescriptorTable :: CodeSegmentSelector()
 {
     return (uint8_t*)&codeSegmentSelector - (uint8_t*)this;
 }
+
+
 GlobalDescriptorTable :: SegmentDescriptor :: SegmentDescriptor(uint32_t base, uint32_t limit, uint8_t flags)
 {
     uint8_t* target = (uint8_t*)this;
