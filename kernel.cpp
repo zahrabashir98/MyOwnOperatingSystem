@@ -1,4 +1,5 @@
 #include "types.h"
+#include "gdt.h"
 void printf(char* str){
     static uint16_t* VideoMemory = (uint16_t*)0xb8000;
     // copy string to this location
@@ -21,7 +22,8 @@ extern "C" void callConstructors()
 
 extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*magicnumber*/){
 
-    printf("Hello World!.......http://google.com");
+    printf("http://google.com");
+    GlobalDescriptorTable gdt;
     // kernel shouldn't stop
     while(1);
 }
