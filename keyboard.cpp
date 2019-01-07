@@ -7,7 +7,7 @@ KeyboardDriver :: KeyboardDriver(InterruptManager* manager)
 {
     // wait for you stop pressing a key
     while(commandport.Read() & 0x1)
-        dataport.Read()
+        dataport.Read();
     
     commandport.Write(0xAE); // // activate interrupts...tells the pic to start sending keyboard interrupt
     commandport.Write(0x20); // get current state

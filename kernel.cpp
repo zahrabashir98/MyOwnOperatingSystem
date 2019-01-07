@@ -2,10 +2,12 @@
 #include "gdt.h"
 #include "interrupts.h"
 #include "keyboard.h"
-
+#include "mouse.h"
 
 void printf(char* str){
+
     static uint16_t* VideoMemory = (uint16_t*)0xb8000;
+    
     // resolve stupidity of printf ^__^
     static uint8_t x=0, y=0;
 
@@ -52,7 +54,7 @@ extern "C" constructor end_ctors;
 // jumps into function pointers
 extern "C" void callConstructors()
 {
-    for (constructor* i=&start_ctors; i != end_ctors; i++)
+    for(constructor* i = &start_ctors; i != &end_ctors; i++)
         (*i)();
 }
 
@@ -63,6 +65,7 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*magicnumb
     // first intialize hardware and others and finally interrupts
     InterruptManager interrupts(&gdt);
     KeyboardDriver keyboard(&interrupts);
+    MouseDriver mouse(&interrupts);
 
     interrupts.Activate();
     // kernel shouldn't stop

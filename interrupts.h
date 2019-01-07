@@ -48,7 +48,6 @@ class InterruptManager{
 
         Port8BitSlow picMasterCommand;
         Port8BitSlow picMasterData;
-        Port8BitSlow picMasterCommand;
         Port8BitSlow picSalveCommand;
         Port8BitSlow picSalveData;
 
@@ -67,6 +66,7 @@ class InterruptManager{
         static void HandleInterruptRequest0x00();
         // keyboard interrupts
         static void HandleInterruptRequest0x01();
+        static void HandleInterruptRequest0x0C();
 
 
 };

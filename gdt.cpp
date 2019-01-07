@@ -1,9 +1,9 @@
 #include "gdt.h"
 
 GlobalDescriptorTable::GlobalDescriptorTable()
-: nullSegmentSelector(0,0,0),
-unusedSegmentSelector(0,0,0),
-codeSegmentSelector(0,64*1024*1024,0x9A),
+: nullSegmentSelector(0, 0, 0),
+unusedSegmentSelector(0, 0, 0),
+codeSegmentSelector(0, 64*1024*1024, 0x9A),
 dataSegmentSelector(0, 64*1024*1024, 0x92)
 
 // Now tell the processor to use the table
@@ -44,7 +44,7 @@ GlobalDescriptorTable :: SegmentDescriptor :: SegmentDescriptor(uint32_t base, u
     }
     else
     {
-        if (limit & 0xFFF) != 0xFFF)
+        if((limit & 0xFFF) != 0xFFF)
             limit = (limit >> 12) -1;
         else
             limit = limit >>12;

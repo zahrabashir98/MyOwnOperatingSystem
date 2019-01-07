@@ -27,8 +27,8 @@
         // destructor
         ~GlobalDescriptorTable();
         // give us the offset of the code segment descriptor
-        uint16_t codeSegmentSelector();
-        uint16_t dataSegmentSelector();
+        uint16_t CodeSegmentSelector();
+        uint16_t DataSegmentSelector();
     };
 
 #endif

@@ -26,6 +26,7 @@ _ZN16InterruptManager26HandleInterruptRequest\num\()Ev:
 # for more interrupts just copy this
 HandleInterruptRequest 0x00
 HandleInterruptRequest 0x01
+HandleInterruptRequest 0x0C
 
 # jumps into handle interrupt function
 int_bottom:
