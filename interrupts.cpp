@@ -3,6 +3,9 @@
 void printf(char* str);
 
 InterruptManager :: GateDescriptor InterruptManager:: interruptDescriptorTable[256];
+
+InterruptManager* InterruptManager :: ActiveInterruptManager = 0;
+
 void InterruptManager :: SetInterruptDescriptorTableEntry(
             uint8_t interruptNumber,
             uint16_t gdt_codeSegmentSelectorOffset,
@@ -63,20 +66,43 @@ InterruptManager :: ~InterruptManager(){
 }
 void InterruptManager :: Activate()
 {
-    //if(ActiveInterruptManager == 0)
-    {
-        //ActiveInterruptManager = this;
-        // Start Interrupts
-        asm("sti");
+
+    if(ActiveInterruptManager != 0)
+        ActiveInterruptManager->Deactivate();
+    ActiveInterruptManager = this;
+    // Start Interrupts
+    asm("sti");
+    
+}
+void InterruptManager :: Deactivate()
+{
+
+    if(ActiveInterruptManager == this){
+        ActiveInterruptManager = 0;
+        asm("cli");
     }
+       
+    
 }
 uint32_t InterruptManager :: handleInterrupt(uint8_t interruptNumber, uint32_t esp)
 {
-    printf("INTERRUPT");
+    // use active... pointer and call DoHandleInterrupt on it
+    if (ActiveInterruptManager != 0){
+        return ActiveInterruptManager->DoHandleInterrupt(interruptNumber, esp);
+    }
     // cause no multiple processes just return it
     return esp;
 
 }
+
+// here we send answer to interrupt (we dont want os to halt here)
+uint32_t InterruptManager :: DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp)
+{
+    printf("INTERRUPT");
+    return esp;
+
+}
+
 //now we need to tell the processor to use this
 // now we need to tell pic
 // we need port for Pic communication (in interrupts.h avval)

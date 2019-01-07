@@ -8,6 +8,8 @@ class InterruptManager{
     
     
     protected:
+
+        static InterruptManager* ActiveInterruptManager;
         struct GateDescriptor
         {
             uint16_t handlerAddressLowBits;
@@ -42,8 +44,12 @@ class InterruptManager{
         InterruptManager(GlobalDescriptorTable* gdt);
         ~InterruptManager();
 
+        void Activate();
+        void Deactivate();
+
         // esp is the current stack pointer(assembler code gives us the current stack pointer)
         static uint32_t handleInterrupt(uint8_t interruptNumber, uint32_t esp);
+        uint32_t DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp);
         static void IgnoreInterruptRequest();
         // timer interrupts
         static void HandleInterruptRequest0x00();
