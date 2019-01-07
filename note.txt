@@ -1,0 +1,7 @@
+
+too interrupt
+.extern _ZN16InterruptManager15handleInterruptEhj
+ino az nm interrupts.o
+bedast ovordam
+chikar mikone ?
+mtoonim jump konim behsh az in file e assembly
