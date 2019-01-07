@@ -24,16 +24,28 @@ InterruptManager :: InterruptManager(GlobalDescriptorTable* gdt){
     // type
     const uint8_t IDT_INTERRUPT_GATE =0xE;
     for (uint16_t i=0; i<256;i++)
-        SetInterruptDescriptorTableEntry(i, CodeSegment, &InterruptIgnore, 0,IDT_INTERRUPT_GATE);
+        SetInterruptDescriptorTableEntry(i, CodeSegment, &IgnoreInterruptRequest, 0,IDT_INTERRUPT_GATE);
     
     SetInterruptDescriptorTableEntry(0x20, CodeSegment, &HandleInterruptRequest0x00, 0,IDT_INTERRUPT_GATE);
     SetInterruptDescriptorTableEntry(0x21, CodeSegment, &HandleInterruptRequest0x01, 0,IDT_INTERRUPT_GATE);
-
+    /*****************************/
+    interruptDescriptorTablePointer idt;
+    idt.size = 256*sizeof(GateDescriptor)-1;
+    idt.base = (uint32_t)interruptDescriptorTable;
+    asm volatile("lidt %0" : : "m"(idt));
 }
 InterruptManager :: ~InterruptManager(){
 
 }
-
+void InterruptManager::Activate()
+{
+    //if(ActiveInterruptManager == 0)
+    {
+        //ActiveInterruptManager = this;
+        // Start Interrupts
+        asm("sti");
+    }
+}
 uint32_t InterruptManager :: handleInterrupt(uint8_t interruptNumber, uint32_t esp)
 {
     printf("INTERRUPT");
@@ -41,3 +53,4 @@ uint32_t InterruptManager :: handleInterrupt(uint8_t interruptNumber, uint32_t e
     return esp;
 
 }
+//now we need to tell the processor to use this

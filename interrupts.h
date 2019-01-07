@@ -19,6 +19,12 @@ class InterruptManager{
         }__attribute__((packed));
 
         static GateDescriptor interruptDescriptorTable[256];
+        struct interruptDescriptorTablePointer{
+                uint32_t base;
+                uint16_t size;
+
+        }__attribute__((packed));
+
         static void SetInterruptDescriptorTableEntry(
             uint8_t interruptNumber,
             uint16_t gdt_codeSegmentSelectorOffset,
