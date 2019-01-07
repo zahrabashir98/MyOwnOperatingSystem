@@ -18,17 +18,41 @@ void InterruptManager :: SetInterruptDescriptorTableEntry(
     interruptDescriptorTable[interruptNumber].reserved = 0;
 }
   
-InterruptManager :: InterruptManager(GlobalDescriptorTable* gdt){
+InterruptManager :: InterruptManager(GlobalDescriptorTable* gdt)
+: picMasterCommand(0x20),
+  picMasterData(0x21),
+  picSalveCommand(0xA0),
+  picSalveData(0xA1)
+{
     // set all entries to interrupt ignore 
     uint16_t CodeSegment = gdt->codeSegmentSelector();
-    // type
-    const uint8_t IDT_INTERRUPT_GATE =0xE;
+    const uint8_t IDT_INTERRUPT_GATE =0xE; // type
+
+
     for (uint16_t i=0; i<256;i++)
         SetInterruptDescriptorTableEntry(i, CodeSegment, &IgnoreInterruptRequest, 0,IDT_INTERRUPT_GATE);
     
     SetInterruptDescriptorTableEntry(0x20, CodeSegment, &HandleInterruptRequest0x00, 0,IDT_INTERRUPT_GATE);
     SetInterruptDescriptorTableEntry(0x21, CodeSegment, &HandleInterruptRequest0x01, 0,IDT_INTERRUPT_GATE);
+    
+    picMasterCommand.Write(0x11);
+    picSalveCommand.Write(0x11);
+    // we tell the master pic if you get any inte at 0x20 (each have 8 interrupts)
+    picMasterData.Write(0x20);
+    picSalveData.Write(0x28);
+
+    picMasterData.Write(0x04);
+    picSalveData.Write(0x02);
+
+    picMasterData.Write(0x01);
+    picSalveData.Write(0x01);
+
+    picMasterData.Write(0x00);
+    picSalveData.Write(0x00);
+
+
     /*****************************/
+    // tell processor to use IDT 
     interruptDescriptorTablePointer idt;
     idt.size = 256*sizeof(GateDescriptor)-1;
     idt.base = (uint32_t)interruptDescriptorTable;
@@ -37,7 +61,7 @@ InterruptManager :: InterruptManager(GlobalDescriptorTable* gdt){
 InterruptManager :: ~InterruptManager(){
 
 }
-void InterruptManager::Activate()
+void InterruptManager :: Activate()
 {
     //if(ActiveInterruptManager == 0)
     {
@@ -54,3 +78,5 @@ uint32_t InterruptManager :: handleInterrupt(uint8_t interruptNumber, uint32_t e
 
 }
 //now we need to tell the processor to use this
+// now we need to tell pic
+// we need port for Pic communication (in interrupts.h avval)

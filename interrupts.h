@@ -32,12 +32,17 @@ class InterruptManager{
             uint8_t DescriptorPrivilegeLevel,
             uint8_t DescriptorType);
 
-    // esp is the current stack pointer(assembler code gives us the current stack pointer)
+        Port8BitSlow picMasterCommand;
+        Port8BitSlow picMasterData;
+        Port8BitSlow picMasterCommand;
+        Port8BitSlow picSalveCommand;
+        Port8BitSlow picSalveData;
+
     public:
         InterruptManager(GlobalDescriptorTable* gdt);
         ~InterruptManager();
 
-
+        // esp is the current stack pointer(assembler code gives us the current stack pointer)
         static uint32_t handleInterrupt(uint8_t interruptNumber, uint32_t esp);
         static void IgnoreInterruptRequest();
         // timer interrupts
