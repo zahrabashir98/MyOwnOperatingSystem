@@ -37,6 +37,7 @@ uint32_t KeyboardDriver :: HandleInterrupt(uint32_t esp)
 
             case 0xFA : break;
             case 0x1E: printf("a"); break;
+            // numlock - ignore
             case 0x45: case 0xC5: break;
 
             default:
