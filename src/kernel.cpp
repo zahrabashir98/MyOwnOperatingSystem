@@ -5,6 +5,8 @@
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
 #include <hardwarecommunication/pci.h>
+#include <drivers/vga.h>
+#include <multitasking.h>
 
 using namespace myos;
 using namespace myos::common;
@@ -121,8 +123,27 @@ public:
 
     }
 
-
 };
+
+
+
+
+
+
+void taskA()
+{
+    while(true)
+        printf("A");
+}
+void taskB()
+{
+    while(true)
+        printf("B");
+}
+
+
+
+
 
 
 typedef void(*constructor)();
@@ -139,8 +160,14 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*magicnumb
 
     printf("http://google.com\n");
     GlobalDescriptorTable gdt;
+    TaskManager taskManager;
+    Task task1(&gdt, taskA);
+    Task task2(&gdt, taskB);
+    taskManager.AddTask(&task1);
+    taskManager.AddTask(&task2);
+   
     // first intialize hardware and others and finally interrupts
-    InterruptManager interrupts(&gdt);
+    InterruptManager interrupts(&gdt, &taskManager);
     
     printf("initializating hardware, stage1\n");
 
@@ -157,11 +184,22 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*magicnumb
 
         PeripheralComponentInterconnectController PCIController;
         PCIController.SelectDrivers(&drvManager, &interrupts);
+
+
+        VideoGraphicsArray vga;
+
     printf("initializating hardware, stage2\n");
         drvManager.ActivateAll();
 
     printf("initializating hardware, stage3\n");
     interrupts.Activate();
+    // evrey thing after this might not be executed
+
+    vga.SetMode(300, 200,8);
+    //draw a blue rectangle
+    for( int32_t y=0; y<200;y++)
+        for( int32_t x=0; x<320;x++)
+            vga.PutPixel(x, y, 0x00, 0x00, 0xA8);
     // kernel shouldn't stop
     while(1);
 }

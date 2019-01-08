@@ -40,14 +40,15 @@ void VideoGraphicsArray::WriteRegisters(uint8_t* registers)
     }
     
     // cathode ray tube controller
+    // Do sth like mutual exclusion (unlock and again lock)
     crtcIndexPort.Write(0x03);
-    crtcDataPort.Write(crtcDataPort.Read() | 0x80);
+    crtcDataPort.Write(crtcDataPort.Read() | 0x80);//old value and write it back to that index
     crtcIndexPort.Write(0x11);
-    crtcDataPort.Write(crtcDataPort.Read() & ~0x80);
-    
+    crtcDataPort.Write(crtcDataPort.Read() & ~0x80);//set the first bit to zero
+    // to make sure for not overrding
     registers[0x03] = registers[0x03] | 0x80;
     registers[0x11] = registers[0x11] & ~0x80;
-    
+   
     for(uint8_t i = 0; i < 25; i++)
     {
         crtcIndexPort.Write(i);
@@ -63,12 +64,13 @@ void VideoGraphicsArray::WriteRegisters(uint8_t* registers)
     
     // attribute controller
     for(uint8_t i = 0; i < 21; i++)
-    {
+    {   
+        // first we should reset
         attributeControllerResetPort.Read();
         attributeControllerIndexPort.Write(i);
         attributeControllerWritePort.Write(*(registers++));
     }
-    
+
     attributeControllerResetPort.Read();
     attributeControllerIndexPort.Write(0x20);
     
@@ -112,6 +114,7 @@ bool VideoGraphicsArray::SetMode(uint32_t width, uint32_t height, uint32_t color
 uint8_t* VideoGraphicsArray::GetFrameBufferSegment()
 {
     graphicsControllerIndexPort.Write(0x06);
+    // only bit 3 and 4
     uint8_t segmentNumber = graphicsControllerDataPort.Read() & (3<<2);
     switch(segmentNumber)
     {
@@ -125,6 +128,7 @@ uint8_t* VideoGraphicsArray::GetFrameBufferSegment()
             
 void VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y,  uint8_t colorIndex)
 {
+    // asks where to put the pixel
     uint8_t* pixelAddress = GetFrameBufferSegment() + 320*y + x;
     *pixelAddress = colorIndex;
 }

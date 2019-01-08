@@ -46,14 +46,16 @@ void InterruptManager :: SetInterruptDescriptorTableEntry(
     interruptDescriptorTable[interruptNumber].reserved = 0;
 }
   
-InterruptManager :: InterruptManager(GlobalDescriptorTable* gdt)
+InterruptManager :: InterruptManager(uint16_t hardwareInterruptOffset, GlobalDescriptorTable* gdt, TaskManager* taskManager)
 : picMasterCommand(0x20),
   picMasterData(0x21),
   picSalveCommand(0xA0),
   picSalveData(0xA1)
 {
     // set all entries to interrupt ignore 
-    uint16_t CodeSegment = gdt->codeSegmentSelector();
+    this->hardwareInterruptOffset = hardwareInterruptOffset;
+    this->taskManager = taskManager;
+    uint32_t CodeSegment = gdt->codeSegmentSelector();
     const uint8_t IDT_INTERRUPT_GATE =0xE; // type
 
 
@@ -141,6 +143,12 @@ uint32_t InterruptManager :: DoHandleInterrupt(uint8_t interruptNumber, uint32_t
         // foo[22] = hex[(interruptNumber >> 4) & 0x0F];
         // foo[23] = hex[interruptNumber & 0x0F];
         // printf(foo);
+    }
+
+
+    if (interruptNumber == 0x20)
+    {
+        esp = taskManager->Schedule((CPUState*)esp);
     }
     //  this case we have to send answer
     if (0x20 <= interruptNumber < 0x30){
