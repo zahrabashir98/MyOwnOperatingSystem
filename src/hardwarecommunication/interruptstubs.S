@@ -18,6 +18,7 @@ _ZN4myos21hardwarecommunication16InterruptManager16HandleInterruptRequest\num\()
 .global _ZN4myos21hardwarecommunication16InterruptManager26HandleInterruptRequest\num\()Ev
 _ZN4myos21hardwarecommunication16InterruptManager26HandleInterruptRequest\num\()Ev:
     movb $\num + IRQ_BASE, (interruptNumber)
+    pushl $0
     jmp int_bottom
 .endm
 
@@ -49,6 +50,10 @@ int_bottom:
     popl %es
     popl %ds
     popa
+
+
+    add $4, %esp
+
 
     _ZN4myos21hardwarecommunication16InterruptManager22IgnoreInterruptRequestEv:
     iret

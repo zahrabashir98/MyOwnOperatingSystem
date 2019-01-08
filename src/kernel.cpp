@@ -167,7 +167,7 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*magicnumb
     taskManager.AddTask(&task2);
    
     // first intialize hardware and others and finally interrupts
-    InterruptManager interrupts(&gdt, &taskManager);
+    InterruptManager interrupts(0x20, &gdt, &taskManager);
     
     printf("initializating hardware, stage1\n");
 

@@ -148,7 +148,7 @@ uint32_t InterruptManager :: DoHandleInterrupt(uint8_t interruptNumber, uint32_t
 
     if (interruptNumber == 0x20)
     {
-        esp = taskManager->Schedule((CPUState*)esp);
+        esp = (uint32_t)taskManager->Schedule((CPUState*)esp);
     }
     //  this case we have to send answer
     if (0x20 <= interruptNumber < 0x30){
