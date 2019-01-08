@@ -1,4 +1,8 @@
-#include "mouse.h"
+#include <drivers/mouse.h>
+
+using namespace myos::common;
+using namespace myos::drivers;
+using namespace myos::hardwarecommunication;
 
 
 MouseEventHandler::MouseEventHandler()
