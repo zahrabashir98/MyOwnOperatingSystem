@@ -103,10 +103,23 @@ uint32_t MouseDriver :: HandleInterrupt(uint32_t esp)
     {
         if(buffer[1] !=0 and buffer[2]!=0)
         {
-
         handler->OnMouseMove(buffer[1],-buffer[2]);
-
         }
+
+        // look if the button has been presses(compare old and new state)
+        for (uint8_t i=0; i<3; i++)
+        {   
+            if ((buffer[0] & (0x01 <<i)) != (buttons & (0x01<<i))){
+
+                if(buttons & (0x1<<i))
+                    handler->OnMouseUp(i+1);
+                else
+                    handler->OnMouseDown(i+1);
+            }
+        }
+        // when we are done we copy buffer[0]
+        buttons = buffer[0];
+
     }
     return esp;
 }

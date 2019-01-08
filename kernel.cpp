@@ -112,18 +112,6 @@ public:
                             | ((VideoMemory[80*y+x] & 0x0F00 ) << 4)
                             | ((VideoMemory[80*y+x] & 0x00FF ));
 
-        // look if the button has been presses(compare old and new state)
-        // for (uint8_t i=0; i<3; i++)
-        // {   
-        //     if ((buffer[0] & (0x01 <<i)) != (buttons & (0x01<<i))){
-        //             // invert color
-        //             VideoMemory[80*y+x] = ((VideoMemory[80*y+x] & 0xF000 ) >> 4)
-        //                                 | ((VideoMemory[80*y+x] & 0x0F00 ) << 4)
-        //                                 | ((VideoMemory[80*y+x] & 0x00FF ));
-        //     }
-        // }
-        // // when we are done we copy buffer[0]
-        // buttons = buffer[0];
     }
 
 
@@ -155,7 +143,8 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*magicnumb
         KeyboardDriver keyboard(&interrupts, &kbhandler);
         drvManager.AddDriver(&keyboard);
 
-        MouseDriver mouse(&interrupts);
+        MouseToConsole mousehandler;
+        MouseDriver mouse(&interrupts, &mousehandler);
         drvManager.AddDriver(&mouse);
 
     printf("initializating hardware, stage2\n");
