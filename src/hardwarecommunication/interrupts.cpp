@@ -134,7 +134,7 @@ uint32_t InterruptManager :: DoHandleInterrupt(uint8_t interruptNumber, uint32_t
 
     else if (interruptNumber != 0x20){
         printf("UNHANDLED INTERRUPT 0x");
-        printfHex(interrupt);
+        printfHex(interruptNumber);
         // // if it is not timer interrupt
         // char* foo = "UNHANDLED INTERRUPT 0x";
         // char* hex = "0123456789ABCDEF";
