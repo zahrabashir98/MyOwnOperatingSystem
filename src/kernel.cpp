@@ -156,7 +156,7 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*magicnumb
 
 
         PeripheralComponentInterconnectController PCIController;
-        PCIController.SelectDrivers(&drvManager);
+        PCIController.SelectDrivers(&drvManager, &interrupts);
     printf("initializating hardware, stage2\n");
         drvManager.ActivateAll();
 
