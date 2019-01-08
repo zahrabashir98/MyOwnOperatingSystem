@@ -3,6 +3,7 @@
 #include "interrupts.h"
 #include "keyboard.h"
 #include "mouse.h"
+#include "driver.h"
 
 void printf(char* str){
 
@@ -47,6 +48,30 @@ void printf(char* str){
     }
 
 }
+void printfHex(uint8_t key){
+
+    // prints the key
+    char* foo = "00";
+    char* hex = "0123456789ABCDEF";
+    foo[0] = hex[(key >> 4) & 0x0F];
+    foo[1] = hex[key & 0x0F];
+    printf(foo);
+}
+
+class PrintfKeyboardEventHandler : public KeyboardEventHandler
+{
+public:
+    void OnKeyDown(char c)
+    {
+        char* foo = " ";
+        foo[0] = c;
+        printf(foo);
+    }
+
+
+};
+
+
 
 typedef void(*constructor)();
 extern "C" constructor start_ctors;
@@ -60,13 +85,26 @@ extern "C" void callConstructors()
 
 extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*magicnumber*/){
 
-    printf("http://google.com");
+    printf("http://google.com\n");
     GlobalDescriptorTable gdt;
     // first intialize hardware and others and finally interrupts
     InterruptManager interrupts(&gdt);
-    KeyboardDriver keyboard(&interrupts);
-    MouseDriver mouse(&interrupts);
+    
+    printf("initializating hardware, stage1\n");
 
+    DriverManager drvManager;
+
+        PrintfKeyboardEventHandler kbhandler;
+        KeyboardDriver keyboard(&interrupts, &kbhandler);
+        drvManager.AddDriver(&keyboard);
+
+        MouseDriver mouse(&interrupts);
+        drvManager.AddDriver(&mouse);
+
+    printf("initializating hardware, stage2\n");
+        drvManager.ActivateAll();
+
+    printf("initializating hardware, stage3\n");
     interrupts.Activate();
     // kernel shouldn't stop
     while(1);
